@@ -1,10 +1,31 @@
 package com.example.Tarefa2.model;
 
-public class Product {
-    private Long id;
-    private String name;
-    private Double price;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "products")
+public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private double price;
+
+    // Construtor sem argumentos (obrigatório para JPA)
+    public Product() {}
+
+    // Construtor com parâmetros
+    public Product(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -21,11 +42,11 @@ public class Product {
         this.name = name;
     }
 
-    public Double getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 }
