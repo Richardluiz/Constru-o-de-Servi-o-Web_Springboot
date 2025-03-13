@@ -1,87 +1,102 @@
 # Tarefa 2 - API Spring Boot
 
-Este projeto é uma aplicação **Spring Boot** desenvolvida para realizar operações **CRUD** em uma entidade chamada `Product`. Ele utiliza **Maven** como gerenciador de dependências e possui endpoints REST para criar, ler, atualizar e deletar produtos.
+# API de Consulta FIPE
 
-## 🚀 Tecnologias Utilizadas
+## Descrição
+Esta API permite consultar informações de veículos através da tabela FIPE, incluindo marcas, modelos, anos e valores.
+
+## Tecnologias Utilizadas
 - **Java 17**
-- **Spring Boot 3**
-- **Spring Data JPA**
-- **Hibernate**
-- **H2 Database** (banco de dados em memória para testes)
-- **Postman** (para testes de API)
+- **Spring Boot**
+- **Maven**
+- **RestTemplate** para chamadas HTTP
 
-## 📌 Configuração do Projeto
-### 1️⃣ Clonar o repositório:
-```sh
-git clone https://github.com/seu-usuario/seu-repositorio.git
-cd seu-repositorio
-```
+## Endpoints Disponíveis
 
-### 2️⃣ Construir o projeto com Maven:
-```sh
-mvn clean install
-```
-
-### 3️⃣ Rodar a aplicação:
-```sh
-mvn spring-boot:run
-```
-
-A aplicação estará disponível em `http://localhost:8080`.
-
-## 📌 Endpoints da API
-
-### 🔹 Criar um Produto (POST)
+### 🔹 Consultar Marcas
+**Requisição:**
 ```http
-POST /products
+GET /marcas
 ```
-**Body (JSON):**
+**Resposta Exemplo:**
+```json
+[
+    { "codigo": "59", "nome": "Volkswagen" },
+    { "codigo": "25", "nome": "Fiat" },
+    { "codigo": "21", "nome": "Chevrolet" }
+]
+```
+
+### 🔹 Consultar Modelos de uma Marca
+**Requisição:**
+```http
+GET /modelos/{marcaId}
+```
+**Exemplo:**
+```http
+GET /modelos/59
+```
+**Resposta Exemplo:**
 ```json
 {
-  "name": "Produto Exemplo",
-  "price": 100.50,
-  "quantity": 10
+    "modelos": [
+        { "codigo": "5229", "nome": "Gol" },
+        { "codigo": "5940", "nome": "Polo" }
+    ]
 }
 ```
 
-### 🔹 Listar todos os Produtos (GET)
+### 🔹 Consultar Anos de um Modelo
+**Requisição:**
 ```http
-GET /products
+GET /anos/{marcaId}/{modeloId}
+```
+**Exemplo:**
+```http
+GET /anos/59/5229
+```
+**Resposta Exemplo:**
+```json
+[
+    { "codigo": "2013-1", "nome": "2013 Gasolina" },
+    { "codigo": "2020-1", "nome": "2020 Flex" }
+]
 ```
 
-### 🔹 Buscar Produto por ID (GET)
+### 🔹 Consultar Valor do Veículo
+**Requisição:**
 ```http
-GET /products/{id}
+GET /valor/{marcaId}/{modeloId}/{ano}
 ```
-
-### 🔹 Atualizar Produto (PUT)
+**Exemplo:**
 ```http
-PUT /products/{id}
+GET /valor/59/5229/2020-1
 ```
-**Body (JSON):**
+**Resposta Exemplo:**
 ```json
 {
-  "name": "Novo Nome",
-  "price": 150.00,
-  "quantity": 5
+    "valor": "R$ 45.000,00",
+    "marca": "Volkswagen",
+    "modelo": "Gol",
+    "anoModelo": 2020,
+    "combustivel": "Flex"
 }
 ```
 
-### 🔹 Deletar Produto (DELETE)
-```http
-DELETE /products/{id}
-```
+## Como Executar o Projeto
+1. Clone o repositório:
+   ```sh
+   git clone https://github.com/seuusuario/seurepositorio.git
+   ```
+2. Navegue até o diretório do projeto:
+   ```sh
+   cd seurepositorio
+   ```
+3. Compile e execute o projeto:
+   ```sh
+   mvn spring-boot:run
+   ```
+4. Acesse os endpoints no navegador ou Postman (`http://localhost:8080/marcas`).
 
-## 🔥 Testando no Postman
-1. Abra o **Postman**
-2. Selecione o método correto (**GET, POST, PUT ou DELETE**)
-3. Insira a URL correspondente
-4. Caso necessário, vá em **Body → Raw → JSON** e insira os dados
-5. Clique em **Send**
-
-## 📝 Autor
-Desenvolvido por [Richard Luiz](https://github.com/Richardluiz). Se gostou, deixe uma ⭐ no repositório!
-
----
-
-
+## Autor
+Richard Luiz
