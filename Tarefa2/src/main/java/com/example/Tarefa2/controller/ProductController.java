@@ -1,47 +1,34 @@
 package com.example.Tarefa2.controller;
 
 import com.example.Tarefa2.service.ProductService;
-import com.example.Tarefa2.model.Product;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/products")
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+   @Autowired   
+    private ProductService productService;  // ✅ Verifique que o nome está correto
 
-    @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    @GetMapping("/marcas")
+    public String consultarMarcas() {
+        return productService.consultarMarcas();  // ✅ Aqui estava "service.consultarMarcas()"
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        Optional<Product> product = productService.getProductById(id);
-        return product.map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/modelos/{marca}")
+    public String consultarModelos(@PathVariable int marca) {
+        return productService.consultarModelos(marca);
     }
 
-    @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
-        Product savedProduct = productService.addProduct(product);
-        return ResponseEntity.ok(savedProduct);
-    }
-    @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
-        Optional<Product> product = productService.updateProduct(id, updatedProduct);
-        return product.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    @GetMapping("/anos/{marca}/{modelo}")
+    public String consultarAnos(@PathVariable int marca, @PathVariable int modelo) {
+        return productService.consultarAnos(marca, modelo);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
-        boolean deleted = productService.deleteProduct(id);
-        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    @GetMapping("/valor/{marca}/{modelo}/{ano}")
+    public String consultarValor(@PathVariable int marca, @PathVariable int modelo, @PathVariable String ano) {
+        return productService.consultarValor(marca, modelo, ano);
     }
 }

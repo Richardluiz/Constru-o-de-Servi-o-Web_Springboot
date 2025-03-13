@@ -1,43 +1,38 @@
-
 package com.example.Tarefa2.service;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import com.example.Tarefa2.model.Product;
-
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class ProductService {
-    private List<Product> products = new ArrayList<>();
-    private Long nextId = 1L;
 
-    public List<Product> getAllProducts() {
-        return products;
+    private String consultarURL(String apiUrl) {
+        String dados = "";
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {  // Corrigido aqui
+            dados = response.getBody();
+        } else {
+            dados = "Falha ao obter dados. Código de status: " + response.getStatusCode();
+        }
+        return dados;
     }
 
-    public Optional<Product> getProductById(Long id) {
-        return products.stream()
-            .filter(p -> p.getId().equals(id)).findFirst();
+    public String consultarMarcas() {
+        return consultarURL("https://parallelum.com.br/fipe/api/v1/carros/marcas");
     }
 
-    public Product addProduct(Product product) {
-        product.setId(nextId++);
-        products.add(product);
-        return product;
+    public String consultarModelos(int id) {
+        return consultarURL("https://parallelum.com.br/fipe/api/v1/carros/marcas/" + id + "/modelos");
     }
 
-    public Optional<Product> updateProduct(Long id, Product updatedProduct) {
-        return getProductById(id).map(product -> {
-            product.setName(updatedProduct.getName());
-            product.setPrice(updatedProduct.getPrice());
-            return product;
-        });
+    public String consultarAnos(int idMarca, int idModelo) {
+        return consultarURL("https://parallelum.com.br/fipe/api/v1/carros/marcas/" + idMarca + "/modelos/" + idModelo + "/anos");
     }
 
-    public boolean deleteProduct(Long id) {
-        return products.removeIf(product -> product.getId().equals(id));
+    public String consultarValor(int idMarca, int idModelo, String ano) {
+        return consultarURL("https://parallelum.com.br/fipe/api/v1/carros/marcas/" + idMarca + "/modelos/" + idModelo + "/anos/" + ano);
     }
 }
